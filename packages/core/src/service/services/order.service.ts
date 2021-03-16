@@ -173,6 +173,15 @@ export class OrderService {
             })
             .getManyAndCount()
             .then(([items, totalItems]) => {
+                items = items.map(item => {
+                    item.lines.map(line => {
+                        if (line.productVariant) {
+                            line.productVariant = translateDeep(line.productVariant, ctx.languageCode);
+                        }
+                        return line;
+                    });
+                    return item;
+                });
                 return {
                     items,
                     totalItems,
